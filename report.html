@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TypeSafe AI Stock Recommendations (Jev-1.13)</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --card-border: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+            --orange: #f97316;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 30px;
+        }
+        .header {
+            max-width: 1100px;
+            margin: 0 auto 30px auto;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0 0 10px 0;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .ticker {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-right: 12px;
+        }
+        .company {
+            font-size: 18px;
+            color: var(--text-muted);
+            margin-right: 12px;
+        }
+        .sector {
+            font-size: 13px;
+            background: #0f172a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: var(--accent);
+            border: 1px solid #334155;
+        }
+        .badge {
+            font-size: 14px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 8px;
+            letter-spacing: 0.5px;
+        }
+        .badge-strong-buy { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid #22c55e; }
+        .badge-buy { background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid #38bdf8; }
+        .badge-neutral { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid #eab308; }
+        .badge-reduce { background: rgba(249, 115, 22, 0.2); color: #fb923c; border: 1px solid #f97316; }
+        .badge-sell { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .metric-box {
+            background: #0f172a;
+            border: 1px solid #334155;
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .metric-title {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+        .metric-val {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .details-section {
+            margin-top: 16px;
+        }
+        .details-section h4, .columns-two h4 {
+            margin: 0 0 8px 0;
+            font-size: 14px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+        .prob-list {
+            background: #0f172a;
+            padding: 12px 16px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .prob-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+        }
+        .bar-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 60%;
+        }
+        .bar {
+            height: 8px;
+            background: var(--accent);
+            border-radius: 4px;
+        }
+        .columns-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        ul {
+            margin: 0;
+            padding-left: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #cbd5e1;
+        }
+        .rationale-text {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #e2e8f0;
+            background: #111827;
+            padding: 12px 16px;
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            margin: 0;
+        }
+
+        /* Responsive Breakpoints for Mobile & Tablet */
+        @media (max-width: 768px) {
+            body {
+                padding: 14px 10px;
+            }
+            .header {
+                margin-bottom: 20px;
+                padding-bottom: 16px;
+            }
+            .header h1 {
+                font-size: 20px;
+                flex-wrap: wrap;
+            }
+            .subtitle {
+                font-size: 13px;
+            }
+            .card {
+                padding: 16px 14px;
+            }
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+            .card-header > div:first-child {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: baseline;
+                gap: 6px;
+            }
+            .badge {
+                align-self: flex-start;
+            }
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .metric-box:last-child {
+                grid-column: span 2;
+            }
+            .metric-val {
+                font-size: 17px;
+            }
+            .columns-two {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .bar-container {
+                width: 50%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .prob-row {
+                font-size: 12px;
+            }
+            .bar-container {
+                width: 45%;
+                gap: 6px;
+            }
+            .badge {
+                font-size: 11px;
+                padding: 4px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 TypeSafe AI Stock Exchange Recommendations</h1>
+        <p class="subtitle">Powered by System One (Jev-1.13) Decision Primitives & Composite Scoring | Generated at 2026-09-23 12:09:14 UTC</p>
+    </div>
+    <div class="container">
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">AAPL</span>
+                    <span class="company">Apple Inc.</span>
+                    <span class="sector">Consumer Electronics</span>
+                </div>
+                <div class="badge badge-neutral">HOLD / WATCH</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">+0.27</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">60%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">1.7 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">31%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">8%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Moderate Bearish</span><div class="bar-container"><div class="bar" style="width: 3.0%;"></div><span>3.0%</span></div></div><div class="prob-row"><span>Moderate Bullish</span><div class="bar-container"><div class="bar" style="width: 29.0%;"></div><span>29.0%</span></div></div><div class="prob-row"><span>Neutral Or Mixed</span><div class="bar-container"><div class="bar" style="width: 68.0%;"></div><span>68.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Neutral Or Mixed bias with 60% confidence. Materiality is 1.72/3.0 with 31% actionable probability. Composite score is +0.27 after factoring 8% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>Apple Stock Is Trading Near Record Highs. Can It Climb Further?</li><li>AAPL Stock Hits Record Highs — Apple Reportedly Explores Screenless Health Trackers And Other Wearables Following iPhone Duo Launch</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">NVDA</span>
+                    <span class="company">Nvidia Corporation</span>
+                    <span class="sector">Semiconductors & AI Hardware</span>
+                </div>
+                <div class="badge badge-strong-buy">STRONG BUY</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">+3.13</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">100%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">3.0 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">82%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">13%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Strong Bullish</span><div class="bar-container"><div class="bar" style="width: 100.0%;"></div><span>100.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Strong Bullish bias with 100% confidence. Materiality is 3.00/3.0 with 82% actionable probability. Composite score is +3.13 after factoring 13% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>Nvidia Q2 FY2027 revenue surged 106% YoY to $96.2B, outperforming Wall Street consensus across all segments.</li><li>Forward guidance for Q3 projected at $108B with management forecasting ~70% revenue expansion into FY2028 on severe compute supply shortages.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">MU</span>
+                    <span class="company">Micron Technology, Inc.</span>
+                    <span class="sector">Memory & Storage Semiconductors</span>
+                </div>
+                <div class="badge badge-strong-buy">STRONG BUY</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">+2.61</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">81%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">2.0 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">86%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">6%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Strong Bullish</span><div class="bar-container"><div class="bar" style="width: 85.0%;"></div><span>85.0%</span></div></div><div class="prob-row"><span>Moderate Bullish</span><div class="bar-container"><div class="bar" style="width: 15.0%;"></div><span>15.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Strong Bullish bias with 81% confidence. Materiality is 2.05/3.0 with 86% actionable probability. Composite score is +2.61 after factoring 6% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>Micron shares surged over 5.2% to cross the $1,000 benchmark, breaking out past key technical resistance levels ahead of Q4 earnings.</li><li>Micron is scheduled to report fiscal Q4 and full-year 2026 earnings on September 30, with analysts modeling record HBM3e/HBM4 revenue.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">VLO</span>
+                    <span class="company">Valero Energy Corporation</span>
+                    <span class="sector">Energy & Petroleum Refining</span>
+                </div>
+                <div class="badge badge-strong-buy">STRONG BUY</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">+2.55</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">80%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">2.0 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">82%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">5%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Moderate Bullish</span><div class="bar-container"><div class="bar" style="width: 16.0%;"></div><span>16.0%</span></div></div><div class="prob-row"><span>Strong Bullish</span><div class="bar-container"><div class="bar" style="width: 84.0%;"></div><span>84.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Strong Bullish bias with 80% confidence. Materiality is 2.02/3.0 with 82% actionable probability. Composite score is +2.55 after factoring 5% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>Valero Energy surged to a fresh 52-week high with trading volume 40% above 30-day average.</li><li>Global crude oil benchmarks (Brent) declined on rising non-OPEC supply, while regional refined product cracks widened significantly.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">META</span>
+                    <span class="company">Meta Platforms, Inc.</span>
+                    <span class="sector">Digital Advertising & Autonomous AI</span>
+                </div>
+                <div class="badge badge-strong-buy">STRONG BUY</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">+1.51</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">83%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">2.0 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">74%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">6%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Strong Bullish</span><div class="bar-container"><div class="bar" style="width: 13.0%;"></div><span>13.0%</span></div></div><div class="prob-row"><span>Moderate Bullish</span><div class="bar-container"><div class="bar" style="width: 87.0%;"></div><span>87.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Moderate Bullish bias with 83% confidence. Materiality is 2.00/3.0 with 74% actionable probability. Composite score is +1.51 after factoring 6% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>Meta launched its autonomous 'Muse AI' agent workflow across enterprise apps, drawing widespread praise for benchmark reasoning efficiency.</li><li>Digital advertising revenue showed resilient double-digit growth, with AI-driven ad targeting conversion rates rising 18% quarter-over-quarter.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">JPM</span>
+                    <span class="company">JPMorgan Chase & Co.</span>
+                    <span class="sector">Financials & Banking</span>
+                </div>
+                <div class="badge badge-neutral">HOLD / WATCH</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">-0.20</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">71%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">1.0 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">32%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">22%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Neutral Or Mixed</span><div class="bar-container"><div class="bar" style="width: 77.0%;"></div><span>77.0%</span></div></div><div class="prob-row"><span>Moderate Bearish</span><div class="bar-container"><div class="bar" style="width: 23.0%;"></div><span>23.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Neutral Or Mixed bias with 71% confidence. Materiality is 1.01/3.0 with 32% actionable probability. Composite score is -0.20 after factoring 22% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>JPMorgan shares pulled back 0.8% in recent sessions, exerting a minor drag on the Dow Jones Industrial Average.</li><li>CEO Jamie Dimon highlighted macroeconomic caution at a financial summit, pointing to persistent geopolitical friction and shifting Treasury yields.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">TSLA</span>
+                    <span class="company">Tesla, Inc.</span>
+                    <span class="sector">Automotive & Autonomous Systems</span>
+                </div>
+                <div class="badge badge-reduce">UNDERWEIGHT / REDUCE</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">-0.71</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">73%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">2.0 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">53%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">81%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Neutral Or Mixed</span><div class="bar-container"><div class="bar" style="width: 21.0%;"></div><span>21.0%</span></div></div><div class="prob-row"><span>Moderate Bearish</span><div class="bar-container"><div class="bar" style="width: 79.0%;"></div><span>79.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Moderate Bearish bias with 73% confidence. Materiality is 2.03/3.0 with 53% actionable probability. Composite score is -0.71 after factoring 81% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>National Highway Traffic Safety Administration (NHTSA) formally requested detailed documentation regarding the Cybercab robotaxi design without pedals and steering wheel.</li><li>Tesla confirmed an official unveiling event scheduled for October 1 for the next-generation Tesla Roadster halo performance vehicle.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>$TSLA NHTSA inquiry is just regulatory theater. Tesla will have Cybercab testing permits resolved. Oct 1 Roadster event will be electric!</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">AOM</span>
+                    <span class="company">iShares Core Moderate Allocation ETF</span>
+                    <span class="sector">Multi-Asset Allocation ETF (Fixed Income & Equities)</span>
+                </div>
+                <div class="badge badge-buy">BUY</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">+0.81</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">94%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">0.5 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">33%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">3%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Neutral Or Mixed</span><div class="bar-container"><div class="bar" style="width: 5.0%;"></div><span>5.0%</span></div></div><div class="prob-row"><span>Moderate Bullish</span><div class="bar-container"><div class="bar" style="width: 95.0%;"></div><span>95.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Moderate Bullish bias with 94% confidence. Materiality is 0.49/3.0 with 33% actionable probability. Composite score is +0.81 after factoring 3% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>iShares Core Moderate Allocation ETF holds steady as Treasury yields stabilize following Fed rate guidance.</li><li>Asset allocators note increased inflows into moderate risk-parity and balanced 60/40 index funds.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">AMD</span>
+                    <span class="company">Advanced Micro Devices, Inc.</span>
+                    <span class="sector">Semiconductors & AI Accelerators</span>
+                </div>
+                <div class="badge badge-buy">BUY</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">+1.34</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">95%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">1.9 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">66%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">5%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Moderate Bullish</span><div class="bar-container"><div class="bar" style="width: 96.0%;"></div><span>96.0%</span></div></div><div class="prob-row"><span>Strong Bullish</span><div class="bar-container"><div class="bar" style="width: 4.0%;"></div><span>4.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Moderate Bullish bias with 95% confidence. Materiality is 1.95/3.0 with 66% actionable probability. Composite score is +1.34 after factoring 5% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>AMD announced expanded deployment of MI350X AI accelerators across Tier-1 cloud service providers.</li><li>Analyst upgrades AMD to Outperform citing market share gains in enterprise server CPUs.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <span class="ticker">AMZN</span>
+                    <span class="company">Amazon.com, Inc.</span>
+                    <span class="sector">Cloud Infrastructure & E-Commerce</span>
+                </div>
+                <div class="badge badge-buy">BUY</div>
+            </div>
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <div class="metric-title">Composite Score</div>
+                    <div class="metric-val">+1.60</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Jev Confidence</div>
+                    <div class="metric-val">73%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Materiality</div>
+                    <div class="metric-val">2.0 / 3.0</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Actionable Prob</div>
+                    <div class="metric-val">67%</div>
+                </div>
+                <div class="metric-box">
+                    <div class="metric-title">Risk Overhang</div>
+                    <div class="metric-val">4%</div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Jev Directional Probabilities</h4>
+                <div class="prob-list">
+                    <div class="prob-row"><span>Moderate Bullish</span><div class="bar-container"><div class="bar" style="width: 78.0%;"></div><span>78.0%</span></div></div><div class="prob-row"><span>Strong Bullish</span><div class="bar-container"><div class="bar" style="width: 22.0%;"></div><span>22.0%</span></div></div>
+                </div>
+            </div>
+
+            <div class="details-section">
+                <h4>Rationale & Synthesis</h4>
+                <p class="rationale-text">Jev assessed Moderate Bullish bias with 73% confidence. Materiality is 2.00/3.0 with 67% actionable probability. Composite score is +1.60 after factoring 4% risk overhang.</p>
+            </div>
+
+            <div class="columns-two">
+                <div>
+                    <h4>Key 24h Catalysts</h4>
+                    <ul class="catalyst-list"><li>Amazon Web Services (AWS) launched new custom Trainium3 chips with 40% better price-performance.</li><li>E-commerce operating margins hit record quarterly levels due to regionalized fulfillment centers.</li></ul>
+                </div>
+                <div>
+                    <h4>Headwinds & Risks</h4>
+                    <ul class="risk-list"><li>Macro interest rate volatility and general market rotation.</li></ul>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</body>
+</html>

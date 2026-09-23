@@ -1,0 +1,294 @@
+[
+  {
+    "ticker": "AAPL",
+    "company": "Apple Inc.",
+    "sector": "Consumer Electronics",
+    "recommendation": "HOLD / WATCH",
+    "composite_score": 0.27,
+    "confidence": 0.6,
+    "directional_bias": "neutral_or_mixed",
+    "bias_probabilities": {
+      "moderate_bearish": 0.03,
+      "strong_bearish": 0.0,
+      "strong_bullish": 0.0,
+      "moderate_bullish": 0.29,
+      "neutral_or_mixed": 0.68
+    },
+    "materiality_score": 1.72,
+    "actionable_catalyst_prob": 0.31,
+    "risk_factor_prob": 0.08,
+    "hype_profile": "mixed",
+    "key_catalysts": [
+      "Apple Stock Is Trading Near Record Highs. Can It Climb Further?",
+      "AAPL Stock Hits Record Highs \u2014 Apple Reportedly Explores Screenless Health Trackers And Other Wearables Following iPhone Duo Launch"
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Neutral Or Mixed bias with 60% confidence. Materiality is 1.72/3.0 with 31% actionable probability. Composite score is +0.27 after factoring 8% risk overhang.",
+    "fetched_news": [
+      "Apple Stock Is Trading Near Record Highs. Can It Climb Further?",
+      "AAPL Stock Hits Record Highs \u2014 Apple Reportedly Explores Screenless Health Trackers And Other Wearables Following iPhone Duo Launch",
+      "Why Did AAPL, OKTA, AMD Stocks Jump To 52-Week Highs Today?",
+      "What Will $5,000 Invested in Apple Stock Be Worth in 5 Years?"
+    ],
+    "fetched_tweets": [
+      "AAPL Stock Hits Record Highs \u2014 Apple Reportedly Explores Screenless Health Trackers And Other Wearables Following iPhone Duo Launch",
+      "Apple\u2019s iPhone 18 Demand Improves At The Margin, China Remains Weak Spot, Says UBS \u2014 Latest Target Implies 13% Downside Potential",
+      "Why Did AAPL, OKTA, AMD Stocks Jump To 52-Week Highs Today?",
+      "AAPL Stock Slides 6% On Forecast Miss: Retail Mood Turns Dim But Traders Urge A Closer Look"
+    ]
+  },
+  {
+    "ticker": "NVDA",
+    "company": "Nvidia Corporation",
+    "sector": "Semiconductors & AI Hardware",
+    "recommendation": "STRONG BUY",
+    "composite_score": 3.13,
+    "confidence": 1.0,
+    "directional_bias": "strong_bullish",
+    "bias_probabilities": {
+      "moderate_bearish": 0.0,
+      "moderate_bullish": 0.0,
+      "neutral_or_mixed": 0.0,
+      "strong_bullish": 1.0,
+      "strong_bearish": 0.0
+    },
+    "materiality_score": 3.0,
+    "actionable_catalyst_prob": 0.82,
+    "risk_factor_prob": 0.13,
+    "hype_profile": "mixed",
+    "key_catalysts": [
+      "Nvidia Q2 FY2027 revenue surged 106% YoY to $96.2B, outperforming Wall Street consensus across all segments.",
+      "Forward guidance for Q3 projected at $108B with management forecasting ~70% revenue expansion into FY2028 on severe compute supply shortages."
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Strong Bullish bias with 100% confidence. Materiality is 3.00/3.0 with 82% actionable probability. Composite score is +3.13 after factoring 13% risk overhang."
+  },
+  {
+    "ticker": "MU",
+    "company": "Micron Technology, Inc.",
+    "sector": "Memory & Storage Semiconductors",
+    "recommendation": "STRONG BUY",
+    "composite_score": 2.61,
+    "confidence": 0.81,
+    "directional_bias": "strong_bullish",
+    "bias_probabilities": {
+      "strong_bullish": 0.85,
+      "moderate_bearish": 0.0,
+      "neutral_or_mixed": 0.0,
+      "moderate_bullish": 0.15,
+      "strong_bearish": 0.0
+    },
+    "materiality_score": 2.05,
+    "actionable_catalyst_prob": 0.86,
+    "risk_factor_prob": 0.06,
+    "hype_profile": "mixed",
+    "key_catalysts": [
+      "Micron shares surged over 5.2% to cross the $1,000 benchmark, breaking out past key technical resistance levels ahead of Q4 earnings.",
+      "Micron is scheduled to report fiscal Q4 and full-year 2026 earnings on September 30, with analysts modeling record HBM3e/HBM4 revenue."
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Strong Bullish bias with 81% confidence. Materiality is 2.05/3.0 with 86% actionable probability. Composite score is +2.61 after factoring 6% risk overhang."
+  },
+  {
+    "ticker": "VLO",
+    "company": "Valero Energy Corporation",
+    "sector": "Energy & Petroleum Refining",
+    "recommendation": "STRONG BUY",
+    "composite_score": 2.55,
+    "confidence": 0.8,
+    "directional_bias": "strong_bullish",
+    "bias_probabilities": {
+      "strong_bearish": 0.0,
+      "moderate_bullish": 0.16,
+      "moderate_bearish": 0.0,
+      "neutral_or_mixed": 0.0,
+      "strong_bullish": 0.84
+    },
+    "materiality_score": 2.02,
+    "actionable_catalyst_prob": 0.82,
+    "risk_factor_prob": 0.05,
+    "hype_profile": "mixed",
+    "key_catalysts": [
+      "Valero Energy surged to a fresh 52-week high with trading volume 40% above 30-day average.",
+      "Global crude oil benchmarks (Brent) declined on rising non-OPEC supply, while regional refined product cracks widened significantly."
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Strong Bullish bias with 80% confidence. Materiality is 2.02/3.0 with 82% actionable probability. Composite score is +2.55 after factoring 5% risk overhang."
+  },
+  {
+    "ticker": "META",
+    "company": "Meta Platforms, Inc.",
+    "sector": "Digital Advertising & Autonomous AI",
+    "recommendation": "STRONG BUY",
+    "composite_score": 1.51,
+    "confidence": 0.83,
+    "directional_bias": "moderate_bullish",
+    "bias_probabilities": {
+      "moderate_bearish": 0.0,
+      "neutral_or_mixed": 0.0,
+      "strong_bearish": 0.0,
+      "strong_bullish": 0.13,
+      "moderate_bullish": 0.87
+    },
+    "materiality_score": 2.0,
+    "actionable_catalyst_prob": 0.74,
+    "risk_factor_prob": 0.06,
+    "hype_profile": "mixed",
+    "key_catalysts": [
+      "Meta launched its autonomous 'Muse AI' agent workflow across enterprise apps, drawing widespread praise for benchmark reasoning efficiency.",
+      "Digital advertising revenue showed resilient double-digit growth, with AI-driven ad targeting conversion rates rising 18% quarter-over-quarter."
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Moderate Bullish bias with 83% confidence. Materiality is 2.00/3.0 with 74% actionable probability. Composite score is +1.51 after factoring 6% risk overhang."
+  },
+  {
+    "ticker": "JPM",
+    "company": "JPMorgan Chase & Co.",
+    "sector": "Financials & Banking",
+    "recommendation": "HOLD / WATCH",
+    "composite_score": -0.2,
+    "confidence": 0.71,
+    "directional_bias": "neutral_or_mixed",
+    "bias_probabilities": {
+      "strong_bearish": 0.0,
+      "strong_bullish": 0.0,
+      "moderate_bullish": 0.0,
+      "neutral_or_mixed": 0.77,
+      "moderate_bearish": 0.23
+    },
+    "materiality_score": 1.01,
+    "actionable_catalyst_prob": 0.32,
+    "risk_factor_prob": 0.22,
+    "hype_profile": "mixed",
+    "key_catalysts": [
+      "JPMorgan shares pulled back 0.8% in recent sessions, exerting a minor drag on the Dow Jones Industrial Average.",
+      "CEO Jamie Dimon highlighted macroeconomic caution at a financial summit, pointing to persistent geopolitical friction and shifting Treasury yields."
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Neutral Or Mixed bias with 71% confidence. Materiality is 1.01/3.0 with 32% actionable probability. Composite score is -0.20 after factoring 22% risk overhang."
+  },
+  {
+    "ticker": "TSLA",
+    "company": "Tesla, Inc.",
+    "sector": "Automotive & Autonomous Systems",
+    "recommendation": "UNDERWEIGHT / REDUCE",
+    "composite_score": -0.71,
+    "confidence": 0.73,
+    "directional_bias": "moderate_bearish",
+    "bias_probabilities": {
+      "neutral_or_mixed": 0.21,
+      "strong_bearish": 0.0,
+      "moderate_bearish": 0.79,
+      "moderate_bullish": 0.0,
+      "strong_bullish": 0.0
+    },
+    "materiality_score": 2.03,
+    "actionable_catalyst_prob": 0.53,
+    "risk_factor_prob": 0.81,
+    "hype_profile": "mixed",
+    "key_catalysts": [
+      "National Highway Traffic Safety Administration (NHTSA) formally requested detailed documentation regarding the Cybercab robotaxi design without pedals and steering wheel.",
+      "Tesla confirmed an official unveiling event scheduled for October 1 for the next-generation Tesla Roadster halo performance vehicle."
+    ],
+    "risks_and_headwinds": [
+      "$TSLA NHTSA inquiry is just regulatory theater. Tesla will have Cybercab testing permits resolved. Oct 1 Roadster event will be electric!"
+    ],
+    "rationale": "Jev assessed Moderate Bearish bias with 73% confidence. Materiality is 2.03/3.0 with 53% actionable probability. Composite score is -0.71 after factoring 81% risk overhang."
+  },
+  {
+    "ticker": "AOM",
+    "company": "iShares Core Moderate Allocation ETF",
+    "sector": "Multi-Asset Allocation ETF (Fixed Income & Equities)",
+    "recommendation": "BUY",
+    "composite_score": 0.81,
+    "confidence": 0.94,
+    "directional_bias": "moderate_bullish",
+    "bias_probabilities": {
+      "neutral_or_mixed": 0.05,
+      "moderate_bullish": 0.95,
+      "moderate_bearish": 0.0,
+      "strong_bullish": 0.0,
+      "strong_bearish": 0.0
+    },
+    "materiality_score": 0.49,
+    "actionable_catalyst_prob": 0.33,
+    "risk_factor_prob": 0.03,
+    "hype_profile": "grounded",
+    "key_catalysts": [
+      "iShares Core Moderate Allocation ETF holds steady as Treasury yields stabilize following Fed rate guidance.",
+      "Asset allocators note increased inflows into moderate risk-parity and balanced 60/40 index funds."
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Moderate Bullish bias with 94% confidence. Materiality is 0.49/3.0 with 33% actionable probability. Composite score is +0.81 after factoring 3% risk overhang."
+  },
+  {
+    "ticker": "AMD",
+    "company": "Advanced Micro Devices, Inc.",
+    "sector": "Semiconductors & AI Accelerators",
+    "recommendation": "BUY",
+    "composite_score": 1.34,
+    "confidence": 0.95,
+    "directional_bias": "moderate_bullish",
+    "bias_probabilities": {
+      "strong_bearish": 0.0,
+      "neutral_or_mixed": 0.0,
+      "moderate_bullish": 0.96,
+      "strong_bullish": 0.04,
+      "moderate_bearish": 0.0
+    },
+    "materiality_score": 1.95,
+    "actionable_catalyst_prob": 0.66,
+    "risk_factor_prob": 0.05,
+    "hype_profile": "mixed",
+    "key_catalysts": [
+      "AMD announced expanded deployment of MI350X AI accelerators across Tier-1 cloud service providers.",
+      "Analyst upgrades AMD to Outperform citing market share gains in enterprise server CPUs."
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Moderate Bullish bias with 95% confidence. Materiality is 1.95/3.0 with 66% actionable probability. Composite score is +1.34 after factoring 5% risk overhang."
+  },
+  {
+    "ticker": "AMZN",
+    "company": "Amazon.com, Inc.",
+    "sector": "Cloud Infrastructure & E-Commerce",
+    "recommendation": "BUY",
+    "composite_score": 1.6,
+    "confidence": 0.73,
+    "directional_bias": "moderate_bullish",
+    "bias_probabilities": {
+      "strong_bearish": 0.0,
+      "moderate_bullish": 0.78,
+      "moderate_bearish": 0.0,
+      "neutral_or_mixed": 0.0,
+      "strong_bullish": 0.22
+    },
+    "materiality_score": 2.0,
+    "actionable_catalyst_prob": 0.67,
+    "risk_factor_prob": 0.04,
+    "hype_profile": "grounded",
+    "key_catalysts": [
+      "Amazon Web Services (AWS) launched new custom Trainium3 chips with 40% better price-performance.",
+      "E-commerce operating margins hit record quarterly levels due to regionalized fulfillment centers."
+    ],
+    "risks_and_headwinds": [
+      "Macro interest rate volatility and general market rotation."
+    ],
+    "rationale": "Jev assessed Moderate Bullish bias with 73% confidence. Materiality is 2.00/3.0 with 67% actionable probability. Composite score is +1.60 after factoring 4% risk overhang."
+  }
+]
